@@ -37,9 +37,3 @@ public class Car {
 
 }
 
-enum CarType {
-    SEDAN,
-    SUV,
-    HATCHBACK,
-    UNIVERSAL
-}

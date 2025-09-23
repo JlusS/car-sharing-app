@@ -42,12 +42,3 @@ public class Payment {
     private boolean isDeleted = false;
 }
 
-enum Status {
-    PENDING,
-    PAID
-}
-
-enum PaymentType {
-    PAYMENT,
-    FINE
-}

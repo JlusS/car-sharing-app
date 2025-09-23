@@ -35,7 +35,3 @@ public class User {
     private boolean isDeleted = false;
 }
 
-enum Role {
-    MANAGER,
-    CUSTOMER
-}
