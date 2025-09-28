@@ -21,13 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "User", description = "User management APIs")
 public class UserController {
-    public final UserService userService;
+    private final UserService userService;
 
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @PutMapping("/{userId}/role")
     @Operation(summary = "Update user role", description =
             "Update the role of a user. Accessible by MANAGER role.")
-    public UserResponseDto updateUserRole(@PathVariable Long userId, @RequestBody UserRoleUpdateDto role) {
+    public UserResponseDto updateUserRole(
+            @PathVariable Long userId,
+            @RequestBody UserRoleUpdateDto role) {
         return userService.updateRole(userId, role);
     }
 

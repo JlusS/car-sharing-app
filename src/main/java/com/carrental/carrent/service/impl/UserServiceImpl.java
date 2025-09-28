@@ -46,7 +46,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updateRole(Long userId, UserRoleUpdateDto roleUpdateDto) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "User not found with id: "
+                                + userId));
         user.setRole(roleUpdateDto.getRole());
         userRepository.save(user);
         return userMapper.toUserResponseDto(user);
@@ -61,7 +63,6 @@ public class UserServiceImpl implements UserService {
                         + authenticatedUser.getId()));
         return userMapper.toUserResponseDto(user);
     }
-
 
     @Override
     public UserResponseDto updateUser(UserUpdateRequestDto requestDto) {
