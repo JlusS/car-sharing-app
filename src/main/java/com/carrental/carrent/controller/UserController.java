@@ -38,7 +38,7 @@ public class UserController {
     @Operation(summary = "Get user by ID", description =
             "Returns a user by their ID. Accessible by MANAGER and CUSTOMER roles.")
     public UserResponseDto getUserById() {
-        return userService.findById();
+        return userService.showUser();
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'CUSTOMER')")

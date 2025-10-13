@@ -2,6 +2,7 @@ package com.carrental.carrent.controller;
 
 import com.carrental.carrent.dto.car.CarDto;
 import com.carrental.carrent.service.CarService;
+import com.carrental.carrent.service.telegram.TelegramNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Car", description = "Car management APIs")
 public class CarController {
     private final CarService carService;
+    private final TelegramNotificationService telegramNotificationService;
 
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @PostMapping
@@ -32,6 +34,7 @@ public class CarController {
     @Operation(summary = "Create a new car", description =
             "Create a new car. Accessible by MANAGER role.")
     public CarDto createCar(@RequestBody @Valid CarDto carDto) {
+        telegramNotificationService.sendNewCarNotification(carDto);
         return carService.save(carDto);
     }
 
