@@ -12,7 +12,9 @@ public interface UserService {
 
     UserResponseDto updateRole(Long id, UserRoleUpdateDto roleUpdateDto);
 
-    UserResponseDto findById();
+    UserResponseDto showUser();
+
+    UserResponseDto findById(Long id);
 
     UserResponseDto updateUser(UserUpdateRequestDto requestDto);
 }

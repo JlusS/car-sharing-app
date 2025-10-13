@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -35,5 +36,24 @@ public class Car {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Car car = (Car) o;
+        return inventory == car.inventory
+                && isDeleted == car.isDeleted
+                && Objects.equals(id, car.id)
+                && Objects.equals(model, car.model)
+                && Objects.equals(brand, car.brand)
+                && carType == car.carType
+                && Objects.equals(dailyFee, car.dailyFee);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, model, brand, carType, inventory, dailyFee, isDeleted);
+    }
 }
 

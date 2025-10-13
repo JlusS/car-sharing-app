@@ -55,12 +55,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto findById() {
+    public UserResponseDto showUser() {
         User authenticatedUser = authenticationService.getAuthenticatedUser();
 
         User user = userRepository.findById(authenticatedUser.getId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: "
                         + authenticatedUser.getId()));
+        return userMapper.toUserResponseDto(user);
+    }
+
+    @Override
+    public UserResponseDto findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: "
+                        + id));
         return userMapper.toUserResponseDto(user);
     }
 
