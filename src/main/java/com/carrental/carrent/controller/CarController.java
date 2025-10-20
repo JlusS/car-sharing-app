@@ -34,8 +34,9 @@ public class CarController {
     @Operation(summary = "Create a new car", description =
             "Create a new car. Accessible by MANAGER role.")
     public CarDto createCar(@RequestBody @Valid CarDto carDto) {
-        telegramNotificationService.sendNewCarNotification(carDto);
-        return carService.save(carDto);
+        CarDto savedCarDto = carService.save(carDto);
+        telegramNotificationService.sendNewCarNotification(savedCarDto);
+        return savedCarDto;
     }
 
     @GetMapping

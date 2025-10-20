@@ -3,6 +3,7 @@ package com.carrental.carrent.service.impl;
 import com.carrental.carrent.dto.car.CarDto;
 import com.carrental.carrent.dto.payment.PaymentDto;
 import com.carrental.carrent.dto.payment.PaymentRequestDto;
+import com.carrental.carrent.exception.EntityNotFoundException;
 import com.carrental.carrent.mapper.PaymentMapper;
 import com.carrental.carrent.model.Payment;
 import com.carrental.carrent.model.PaymentType;
@@ -64,7 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void markPaymentSuccessful(String sessionId) {
         Payment payment = paymentRepository.findBySessionId(sessionId)
-                .orElseThrow(() -> new RuntimeException("Payment not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Payment not found"));
         payment.setStatus(Status.PAID);
         paymentRepository.save(payment);
     }
