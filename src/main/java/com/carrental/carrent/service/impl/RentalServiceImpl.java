@@ -3,6 +3,7 @@ package com.carrental.carrent.service.impl;
 import com.carrental.carrent.dto.rental.RentalDto;
 import com.carrental.carrent.dto.rental.RentalResponseDto;
 import com.carrental.carrent.dto.rental.RentalReturnRequestDto;
+import com.carrental.carrent.exception.RentalNotFoundException;
 import com.carrental.carrent.mapper.RentalMapper;
 import com.carrental.carrent.model.Car;
 import com.carrental.carrent.model.Rental;
@@ -91,7 +92,7 @@ public class RentalServiceImpl implements RentalService {
     public RentalResponseDto getSpecificRental() {
         User authenticatedUser = authenticationService.getAuthenticatedUser();
         Rental rental = rentalRepository.findByUserId(authenticatedUser.getId())
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new RentalNotFoundException(
                         "Rental not found for user id: "
                                 + authenticatedUser.getId()));;
         return rentalMapper.toResponseDto(rental);

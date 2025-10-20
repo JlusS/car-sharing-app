@@ -11,28 +11,37 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(value = "telegram.bot.enabled", havingValue = "true", matchIfMissing = true)
 public class TelegramNotificationService {
     private final CarRentalTelegramBot telegramBot;
     private final UserService userService;
     private final CarService carService;
 
-    @Value("${telegram.bot.admin-chat-id}")
+    @Value("${telegram.bot.admin-chat-id:}")
     private String adminChatId;
 
     public void sendNewRentalNotification(RentalDto rental, UserResponseDto user, CarDto car) {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         String message = String.format(
-                "🚗 NEW RENTAL\n"
-                        + "Customer: %s %s (%s)\n"
-                        + "Car: %s %s %s\n"
-                        + "Period: %s - %s\n"
-                        + "Total: $%.2f\n"
-                        + "Rental ID: %d",
+                """
+                        🚗 NEW RENTAL
+                        Customer: %s %s (%s)
+                        Car: %s %s %s
+                        Period: %s - %s
+                        Total: $%.2f
+                        Rental ID: %d""",
                 user.getFirstName(), user.getLastName(), user.getEmail(),
                 car.getBrand(), car.getModel(), car.getCarType(),
                 rental.getRentalDate(), rental.getReturnDate(),
@@ -53,11 +62,12 @@ public class TelegramNotificationService {
 
     public void sendNewCarNotification(CarDto car) {
         String message = String.format(
-                "🆕 NEW CAR ADDED\n"
-                        + "Car: %s %s %s\n"
-                        + "Inventory: %d\n"
-                        + "Daily fee: $%.2f\n"
-                        + "Car ID: %d",
+                """
+                        🆕 NEW CAR ADDED
+                        Car: %s %s %s
+                        Inventory: %d
+                        Daily fee: $%.2f
+                        Car ID: %d""",
                 car.getBrand(), car.getModel(), car.getCarType(),
                 car.getInventory(),
                 car.getDailyFee(),
@@ -72,13 +82,14 @@ public class TelegramNotificationService {
         long daysOverdue = ChronoUnit.DAYS.between(rental.getReturnDate(), LocalDate.now());
 
         String message = String.format(
-                "⚠️ OVERDUE RENTAL\n"
-                        + "Customer: %s %s (%s)\n"
-                        + "Car: %s %s %s\n"
-                        + "Expected Return: %s\n"
-                        + "Overdue by: %d days\n"
-                        + "Rental ID: %d\n"
-                        + "Potential Fine: $%.2f",
+                """
+                        ⚠️ OVERDUE RENTAL
+                        Customer: %s %s (%s)
+                        Car: %s %s %s
+                        Expected Return: %s
+                        Overdue by: %d days
+                        Rental ID: %d
+                        Potential Fine: $%.2f""",
                 user.getFirstName(), user.getLastName(), user.getEmail(),
                 car.getBrand(), car.getModel(), car.getCarType(),
                 rental.getReturnDate(),
@@ -97,13 +108,14 @@ public class TelegramNotificationService {
             long overdueDays = ChronoUnit.DAYS.between(rental.getReturnDate(), LocalDate.now());
 
             String message = String.format(
-                    "💰 FINE APPLIED\n"
-                            + "Customer: %s %s (%s)\n"
-                            + "Car: %s %s\n"
-                            + "Due date: %s\n"
-                            + "Overdue: %d days\n"
-                            + "Fine amount: $%.2f\n"
-                            + "Rental ID: %d",
+                    """
+                            💰 FINE APPLIED
+                            Customer: %s %s (%s)
+                            Car: %s %s
+                            Due date: %s
+                            Overdue: %d days
+                            Fine amount: $%.2f
+                            Rental ID: %d""",
                     user.getFirstName(), user.getLastName(), user.getEmail(),
                     car.getBrand(), car.getModel(),
                     rental.getReturnDate(),
@@ -119,16 +131,27 @@ public class TelegramNotificationService {
     }
 
     private void sendToAdmin(String message) {
+        if (adminChatId == null || adminChatId.trim().isEmpty()) {
+            System.err.println("❌ Telegram chat ID is not configured or empty");
+            return;
+        }
+
+        String trimmedChatId = adminChatId.trim();
+        if (trimmedChatId.isEmpty()) {
+            System.err.println("❌ Telegram chat ID is empty after trimming");
+            return;
+        }
+
         try {
             SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(adminChatId);
+            sendMessage.setChatId(trimmedChatId);
             sendMessage.setText(message);
             telegramBot.execute(sendMessage);
 
             System.out.println("✅ Telegram notification sent: " + message);
         } catch (TelegramApiException e) {
             System.err.println("❌ Error sending Telegram message: " + e.getMessage());
-            System.err.println("Admin Chat ID: " + adminChatId);
+            System.err.println("Admin Chat ID: " + trimmedChatId);
             System.err.println("Message: " + message);
         } catch (Exception e) {
             System.err.println("❌ Unexpected error: " + e.getMessage());

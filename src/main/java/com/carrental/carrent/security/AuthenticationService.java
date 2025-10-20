@@ -4,9 +4,9 @@ import com.carrental.carrent.dto.user.UserLoginRequestDto;
 import com.carrental.carrent.dto.user.UserLoginResponseDto;
 import com.carrental.carrent.model.User;
 import com.carrental.carrent.repository.user.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,7 +38,7 @@ public class AuthenticationService {
                 .getPrincipal();
 
         return userRepository.findById(userDetails.getId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "User with ID " + userDetails.getId() + " not found"));
+                .orElseThrow(() -> new BadCredentialsException(
+                        "Authenticated user not found in database"));
     }
 }

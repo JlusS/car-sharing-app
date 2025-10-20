@@ -3,6 +3,7 @@ package com.carrental.carrent.dto.user;
 import com.carrental.carrent.validation.PasswordMatches;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -21,8 +22,11 @@ public class UserRegistrationRequestDto {
     @NotBlank
     @Length(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
     private String repeatPassword;
-    @NotBlank
+    @NotBlank(message = "First name cannot be blank")
+    @Size(min = 1, max = 255, message = "First name must be between 1 and 255 characters")
     private String firstName;
-    @NotBlank
+
+    @NotBlank(message = "Last name cannot be blank")
+    @Size(min = 1, max = 255, message = "Last name must be between 1 and 255 characters")
     private String lastName;
 }

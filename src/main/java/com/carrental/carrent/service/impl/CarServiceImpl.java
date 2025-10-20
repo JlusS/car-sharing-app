@@ -1,6 +1,7 @@
 package com.carrental.carrent.service.impl;
 
 import com.carrental.carrent.dto.car.CarDto;
+import com.carrental.carrent.exception.EntityNotFoundException;
 import com.carrental.carrent.mapper.CarMapper;
 import com.carrental.carrent.model.Car;
 import com.carrental.carrent.repository.car.CarRepository;
@@ -34,19 +35,19 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarDto findById(Long id) {
         return carMapper.toDto(carRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Car not found")
+                () -> new EntityNotFoundException("Car not found")
                 ));
     }
 
     @Override
     public CarDto update(Long id, CarDto carDto) {
         Car car = carRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Car not found")
+                () -> new EntityNotFoundException("Car not found")
         );
 
         carMapper.updateModelFromDto(car, carDto);
-        carRepository.save(car);
-        return null;
+        Car updatedCar = carRepository.save(car);
+        return carMapper.toDto(updatedCar);
     }
 
     @Override
