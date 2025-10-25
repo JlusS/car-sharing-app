@@ -70,19 +70,19 @@ Interactive API docs are available via Swagger. You can also import the Postman 
 
 ---
 
-##📥 Installation
+## 📥 Installation
 Clone the repository and install dependencies:
 
-# Clone the repo
+Clone the repo
 git clone https://github.com/JlusS/car-sharing-app
 
-# Navigate into the project
+Navigate into the project
 cd carrental
 
-# Build with Docker:
+Build with Docker:
 docker build -t carrental .
 
-# Or with Maven:
+Or with Maven:
 mvn install
 ▶️ Usage
 Run with Docker:
