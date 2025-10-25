@@ -68,6 +68,39 @@
 
 Interactive API docs are available via Swagger. You can also import the Postman collection from [`docs/postman_collection.json`](docs/postman_collection.json).
 
+📥 Installation
+Clone the repository and install dependencies:
+
+# Clone the repo
+git clone https://github.com/JlusS/car-sharing-app
+
+# Navigate into the project
+cd carrental
+
+# Build with Docker:
+docker build -t carrental .
+
+# Or with Maven:
+mvn install
+▶️ Usage
+Run with Docker:
+docker run -it carrental
+
+Run with Maven:
+mvn spring-boot:run
+Once running, access: Application: http://localhost:8080
+
+Swagger UI: http://localhost:8080/swagger-ui.html
+
+API Documentation: http://localhost:8080/v3/api-docs
+
+🧪 Testing
+Run tests with Maven:
+mvn test
+
+Run tests in Docker:
+docker run -it carrental mvn test
+
 ---
 
 ## 🧪 Testing
