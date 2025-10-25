@@ -68,7 +68,9 @@
 
 Interactive API docs are available via Swagger. You can also import the Postman collection from [`docs/postman_collection.json`](docs/postman_collection.json).
 
-📥 Installation
+---
+
+##📥 Installation
 Clone the repository and install dependencies:
 
 # Clone the repo
@@ -93,6 +95,8 @@ Once running, access: Application: http://localhost:8080
 Swagger UI: http://localhost:8080/swagger-ui.html
 
 API Documentation: http://localhost:8080/v3/api-docs
+
+---
 
 🧪 Testing
 Run tests with Maven:
